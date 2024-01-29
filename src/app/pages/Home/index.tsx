@@ -4,6 +4,7 @@ import { Heading, Text } from "@ignite-ui/react";
 import { Container, Hero, Preview } from "./styles";
 import previewImage from "@/assets/preview.png";
 import Image from "next/image";
+import { ClaimUserNameForm } from "./components/ClaimUserNameForm";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <Text size="xl">
           Connect your calendar to your website and let your clients book
         </Text>
+        <ClaimUserNameForm />
       </Hero>
 
       <Preview>
