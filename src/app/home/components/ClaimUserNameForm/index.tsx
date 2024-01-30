@@ -4,6 +4,7 @@ import { ArrowRight } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 const claimUserNameFormSchema = z.object({
   username: z
@@ -12,7 +13,7 @@ const claimUserNameFormSchema = z.object({
     .regex(/^([a-z\\-]+)$/i, {
       message: "Username must contain only letters and dashes",
     })
-    .transform((value) => value.toLowerCase),
+    .transform((value) => value.toLowerCase()),
 });
 
 type ClaimUserNameFormProps = z.infer<typeof claimUserNameFormSchema>;
@@ -26,14 +27,19 @@ export const ClaimUserNameForm = () => {
     resolver: zodResolver(claimUserNameFormSchema),
   });
 
-  const handleClaimUserName = async (data: ClaimUserNameFormProps) => {
-    console.log(data.username);
+  const router = useRouter();
+
+  const handleClaimUserName = (data: ClaimUserNameFormProps) => {
+    const { username } = data;
+    console.log(username);
+    router.push(`/register?username=${username}`);
   };
 
   return (
     <>
       <Form as="form" onSubmit={handleSubmit(handleClaimUserName)}>
         <TextInput
+          crossOrigin="anonymous"
           size="sm"
           prefix="calendar.com/"
           placeholder="your user"

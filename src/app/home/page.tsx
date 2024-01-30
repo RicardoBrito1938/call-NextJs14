@@ -1,5 +1,3 @@
-"use client";
-
 import { Heading, Text } from "@ignite-ui/react";
 import { Container, Hero, Preview } from "./styles";
 import previewImage from "@/assets/preview.png";
