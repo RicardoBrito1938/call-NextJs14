@@ -8,6 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { api } from "@/lib/axios";
 
 const claimUserNameFormSchema = z.object({
   username: z
@@ -38,7 +39,14 @@ export default function Register() {
   });
 
   const handleRegister = async (data: RegisterFormValues) => {
-    console.log(data);
+    try {
+      await api.post("/users", {
+        username: data.username,
+        name: data.name,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
