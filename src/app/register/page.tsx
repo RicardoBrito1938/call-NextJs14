@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { api } from "@/lib/axios";
+import { AxiosError } from "axios";
 
 const claimUserNameFormSchema = z.object({
   username: z
@@ -45,7 +46,11 @@ export default function Register() {
         name: data.name,
       });
     } catch (error) {
-      console.log(error);
+      if (error instanceof AxiosError && !!error?.response?.data?.error) {
+        alert(error?.response?.data?.error);
+        return;
+      }
+      console.error(error);
     }
   };
 
