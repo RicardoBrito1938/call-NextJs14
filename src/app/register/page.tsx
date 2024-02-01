@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/lib/axios";
 import { AxiosError } from "axios";
 
@@ -27,6 +27,7 @@ const claimUserNameFormSchema = z.object({
 type RegisterFormValues = z.infer<typeof claimUserNameFormSchema>;
 
 export default function Register() {
+  const router = useRouter();
   const useSearch = useSearchParams();
   const username = useSearch.get("username");
 
@@ -45,6 +46,8 @@ export default function Register() {
         username: data.username,
         name: data.name,
       });
+
+      router.push(`/register/connect-calendar`);
     } catch (error) {
       if (error instanceof AxiosError && !!error?.response?.data?.error) {
         alert(error?.response?.data?.error);
