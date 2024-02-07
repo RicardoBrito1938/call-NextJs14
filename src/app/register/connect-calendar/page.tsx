@@ -6,6 +6,7 @@ import { Container, Header } from "../styles";
 
 import { useSearchParams } from "next/navigation";
 import { ConnectBox, ConnectItem } from "./styles";
+import { signIn } from "next-auth/react";
 
 export default function Register() {
   const useSearch = useSearchParams();
@@ -26,7 +27,11 @@ export default function Register() {
       <ConnectBox>
         <ConnectItem>
           <Text>Google Calendar</Text>
-          <Button variant="secondary" size="sm">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => signIn("google")}
+          >
             Connect
             <ArrowRight />
           </Button>
