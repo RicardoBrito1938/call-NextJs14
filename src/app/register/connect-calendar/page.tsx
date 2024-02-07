@@ -1,18 +1,23 @@
 "use client";
 import { Button, Heading, MultiStep, Text } from "@ignite-ui/react";
-import { ArrowRight } from "phosphor-react";
+import { ArrowRight, Check } from "phosphor-react";
 
 import { Container, Header } from "../styles";
 
 import { useSearchParams } from "next/navigation";
-import { ConnectBox, ConnectItem } from "./styles";
-import { signIn } from "next-auth/react";
+import { AuthError, ConnectBox, ConnectItem } from "./styles";
+import { signIn, useSession } from "next-auth/react";
 
 export default function Register() {
   const useSearch = useSearchParams();
-  const username = useSearch.get("username");
+  const session = useSession();
 
-  //   const handleRegister = async (data: RegisterFormValues) => {};
+  const hasAuthError = !!useSearch.get("error");
+  const isSignedIn = session.status === "authenticated";
+
+  const handleConnectGoogleCalendar = async () => {
+    await signIn("google");
+  };
 
   return (
     <Container>
@@ -27,17 +32,31 @@ export default function Register() {
       <ConnectBox>
         <ConnectItem>
           <Text>Google Calendar</Text>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => signIn("google")}
-          >
-            Connect
-            <ArrowRight />
-          </Button>
+          {isSignedIn ? (
+            <Button size="sm" disabled>
+              Connected
+              <Check />
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleConnectGoogleCalendar}
+            >
+              Connect
+              <ArrowRight />
+            </Button>
+          )}
         </ConnectItem>
 
-        <Button type="submit">
+        {hasAuthError && (
+          <AuthError size="sm">
+            Error connecting to your calendar. Please try again and check if you
+            allowed the necessary permissions.
+          </AuthError>
+        )}
+
+        <Button type="submit" disabled={!isSignedIn}>
           Next step
           <ArrowRight />
         </Button>
