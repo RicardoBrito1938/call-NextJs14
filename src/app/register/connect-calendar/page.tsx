@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { AuthError, ConnectBox, ConnectItem } from "./styles";
 import { signIn, useSession } from "next-auth/react";
 
-export default function Register() {
+export default function ConnectCalendar() {
   const useSearch = useSearchParams();
   const session = useSession();
 
