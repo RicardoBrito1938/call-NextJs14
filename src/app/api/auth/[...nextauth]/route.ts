@@ -1,8 +1,13 @@
 import { PrismaAdapter } from "@/lib/auth/prisma-adapter";
-import NextAuth from "next-auth";
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
+import NextAuth, { NextAuthOptions, getServerSession } from "next-auth";
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 
-const handler = NextAuth({
+export const config = {
   adapter: PrismaAdapter(),
 
   providers: [
@@ -44,6 +49,17 @@ const handler = NextAuth({
       };
     },
   },
-});
+} satisfies NextAuthOptions;
+
+export function auth(
+  ...args:
+    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+    | [NextApiRequest, NextApiResponse]
+    | []
+) {
+  return getServerSession(...args, config);
+}
+
+const handler = NextAuth(config);
 
 export { handler as GET, handler as POST };

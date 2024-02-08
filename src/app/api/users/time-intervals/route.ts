@@ -1,8 +1,11 @@
 import { getServerSession } from "next-auth/next";
-import { GET, POST } from "../../auth/[...nextauth]/route";
+import { config } from "../../auth/[...nextauth]/route";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
-  const session = await getServerSession(req, res, GET);
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getServerSession(req, res, config);
+
+  console.log(res);
 
   if (!session) {
     res.status(401).json({ message: "You must be logged in." });
