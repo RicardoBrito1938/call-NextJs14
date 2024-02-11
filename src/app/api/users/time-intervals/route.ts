@@ -22,8 +22,6 @@ export async function POST(request: Request) {
 
   const { intervals } = timeIntervalsBodySchema.parse(requestBody);
 
-  console.log(intervals);
-
   // //time to create a proper SQL server, but not today Satan
   // //for me in the future, instead of using Promise.all, we could use createMany, but sqlite does not support many inserts at once
 
