@@ -31,7 +31,6 @@ export const ClaimUserNameForm = () => {
 
   const handleClaimUserName = (data: ClaimUserNameFormProps) => {
     const { username } = data;
-    console.log(username);
     router.push(`/register?username=${username}`);
   };
 
