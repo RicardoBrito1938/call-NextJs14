@@ -63,14 +63,27 @@ export async function GET(request: NextRequest, { params }: IURLParams) {
     );
   });
 
-  const formattedMonth = month.length === 1 ? `0${month}` : month;
+  const blockedDatesRaw: { day: number }[] = await prisma.$queryRaw`
+      SELECT DAY(S.date) AS day,
+      COUNT(S.DATE) AS amount,
+      ((UTI.time_end_in_minutes - UTI.time_start_in_minutes ) / 60) AS size
 
-  const blockedDatesRaw = await prisma.$queryRaw`
-    SELECT *
-    FROM schedulings S
-    WHERE S.user_id = ${user.id}
-    AND FORMAT(S.date, 'yyyy-MM') = ${`${year}-${formattedMonth}`}
-`;
+      FROM schedulings S
 
-  return Response.json({ blockedDatesRaw });
+      LEFT JOIN user_time_intervals UTI
+       ON UTI.week_day = DATEPART(dw, DATEADD(day, 1 , S.date))
+
+      WHERE S.user_id = ${user.id}
+      AND FORMAT(S.date, 'yyyy-MM') = ${`${year}-${month}`}
+
+      GROUP BY
+        DAY(S.date),
+        ((UTI.time_end_in_minutes - UTI.time_start_in_minutes ) / 60)
+
+      HAVING COUNT(S.DATE) >= ((UTI.time_end_in_minutes - UTI.time_start_in_minutes ) / 60)
+  `;
+
+  const blockedDates = blockedDatesRaw.map((blockedDate) => blockedDate.day);
+
+  return Response.json({ blockedWeekDays, blockedDates });
 }
