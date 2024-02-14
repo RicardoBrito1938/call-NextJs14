@@ -89,9 +89,13 @@ export async function GET(request: NextRequest, { params }: IURLParams) {
   });
 
   const availableTimes = possibleTimes.filter((time) => {
-    return !blockedTimes.some(
+    const isTimeBlocked = !blockedTimes.some(
       (blockedTime) => blockedTime.date.getHours() === time
     );
+
+    const isTimePast = referenceDate.set("hour", time).isBefore(new Date());
+
+    return !isTimePast && !isTimeBlocked;
   });
 
   return Response.json({ possibleTimes, availableTimes });
