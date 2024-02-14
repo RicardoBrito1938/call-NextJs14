@@ -42,6 +42,7 @@ export const CalendarStep = () => {
 
     return response.data;
   };
+
   const { data: availability } = useQuery<IAvailability>({
     queryKey: ["availability", selectedDateWithoutTime],
     queryFn,
