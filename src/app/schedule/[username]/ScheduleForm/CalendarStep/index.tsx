@@ -13,11 +13,15 @@ import { api } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 
 interface IAvailability {
-  possibleTimes: string[];
-  availableTimes: string[];
+  possibleTimes: number[];
+  availableTimes: number[];
 }
 
-export const CalendarStep = () => {
+interface CalendarStepProps {
+  onSelectDateTime: (date: Date) => void;
+}
+
+export const CalendarStep = ({ onSelectDateTime }: CalendarStepProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const { username } = useParams();
@@ -49,6 +53,15 @@ export const CalendarStep = () => {
     enabled: !!selectedDate,
   });
 
+  const handleSelectTime = (hour: number) => {
+    const dateWithTime = dayjs(selectedDate)
+      .set("hour", hour)
+      .startOf("hour")
+      .toDate();
+
+    onSelectDateTime(dateWithTime);
+  };
+
   return (
     <Container isTimePickerOpen={isDateSelected}>
       <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
@@ -64,6 +77,7 @@ export const CalendarStep = () => {
                 <TimePickerItem
                   key={hour}
                   disabled={!availability.availableTimes.includes(hour)}
+                  onClick={() => handleSelectTime(hour)}
                 >
                   {String(hour).padStart(2, "0")}: 00h
                 </TimePickerItem>
