@@ -1,17 +1,26 @@
+import dayjs from "dayjs";
+
 interface GetWeekDaysParams {
   short?: boolean;
 }
 
 export function getWeekDays({ short = false }: GetWeekDaysParams = {}) {
-  const formatter = new Intl.DateTimeFormat("en-UK", { weekday: "long" });
+  // Define the weekdays starting from Sunday
+  const weekDays = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
-  return Array.from(Array(7).keys())
-    .map((day) => formatter.format(new Date(Date.UTC(2024, 5, day))))
-    .map((weekDay) => {
-      if (short) {
-        return weekDay.substring(0, 3).toUpperCase();
-      }
-
-      return weekDay.substring(0, 1).toUpperCase().concat(weekDay.substring(1));
-    });
+  if (short) {
+    // If short is true, return the abbreviated form (first three letters) and uppercase
+    return weekDays.map((day) => day.substring(0, 3).toUpperCase());
+  }
+  return weekDays.map(
+    (day) => day.substring(0, 1).toUpperCase() + day.substring(1)
+  );
 }
